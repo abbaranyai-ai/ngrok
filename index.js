@@ -33,7 +33,7 @@ let ngrokClient = null;
 let authtoken;
 
 async function connect(opts) {
-  const { tunnelOpts, globalOpts } = defaults(opts);
+  const { globalOpts } = defaults(opts);
   validate(globalOpts);
 
   if (globalOpts.authtoken) {
@@ -44,21 +44,7 @@ async function connect(opts) {
   }
   processUrl = await getProcess(globalOpts);
   ngrokClient = new NgrokClient(processUrl);
-  return connectRetry(tunnelOpts);
-}
-
-async function connectRetry(opts, retryCount = 0) {
-  opts.name = String(opts.name || uuid.v4());
-  try {
-    const response = await ngrokClient.startTunnel(opts);
-    return response.public_url;
-  } catch (err) {
-    if (!isRetriable(err) || retryCount >= 100) {
-      throw err;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    return connectRetry(opts, ++retryCount);
-  }
+  return ngrokClient;
 }
 
 /**
