@@ -10,7 +10,7 @@ declare module "ngrok" {
    *
    * @param options Optional. Port number or options.
    */
-  export function connect(options?: number | Ngrok.Options): Promise<string>;
+  export function connect(options?: number | Ngrok.Options): Promise<NgrokClient>;
 
   /**
    * Stops a tunnel, or all of them if no URL is passed.
